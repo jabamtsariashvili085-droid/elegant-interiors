@@ -1,0 +1,227 @@
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Search, User, ShoppingCart, Menu, X, ChevronDown, Globe } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { Language } from '@/lib/i18n';
+import { categories } from '@/lib/products';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const langLabels: Record<Language, string> = { ka: 'ქარ', en: 'EN', ru: 'RU' };
+
+const Header = () => {
+  const { language, setLanguage, t } = useLanguage();
+  const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const navItems = [
+    { label: t.nav.home, path: '/' },
+    { label: t.nav.products, path: '/products', hasDropdown: true },
+    { label: t.nav.about, path: '/about' },
+    { label: t.nav.contact, path: '/contact' },
+  ];
+
+  const categoryNames: Record<string, string> = {
+    tables: t.categories.tables,
+    livingRoom: t.categories.livingRoom,
+    bedroom: t.categories.bedroom,
+    hallway: t.categories.hallway,
+    other: t.categories.other,
+  };
+
+  const subcategoryNames: Record<string, string> = t.subcategories as unknown as Record<string, string>;
+
+  return (
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <Link to="/" className="text-xl lg:text-2xl font-bold tracking-tight text-foreground">
+            FURNIFY
+          </Link>
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navItems.map((item) => (
+              <div
+                key={item.path}
+                className="relative"
+                onMouseEnter={() => item.hasDropdown && setProductsOpen(true)}
+                onMouseLeave={() => item.hasDropdown && setProductsOpen(false)}
+              >
+                <Link
+                  to={item.path}
+                  className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname === item.path ? 'text-primary' : 'text-foreground'
+                  }`}
+                >
+                  {item.label}
+                  {item.hasDropdown && <ChevronDown className="w-3.5 h-3.5" />}
+                </Link>
+
+                {/* Products Dropdown */}
+                {item.hasDropdown && productsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    className="absolute top-full left-0 mt-2 bg-popover border border-border rounded-lg shadow-xl p-6 min-w-[500px]"
+                  >
+                    <div className="grid grid-cols-2 gap-6">
+                      {categories.map((cat) => (
+                        <div key={cat.id}>
+                          <Link
+                            to={`/products?category=${cat.id}`}
+                            className="font-semibold text-sm text-foreground mb-2 block hover:text-primary"
+                          >
+                            {categoryNames[cat.id]}
+                          </Link>
+                          <div className="space-y-1">
+                            {cat.subcategories.map((sub) => (
+                              <Link
+                                key={sub}
+                                to={`/products?category=${cat.id}&sub=${sub}`}
+                                className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                              >
+                                {subcategoryNames[sub]}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* Right side */}
+          <div className="flex items-center gap-3">
+            {/* Search */}
+            <div className="relative">
+              <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 hover:bg-secondary rounded-lg transition-colors">
+                <Search className="w-5 h-5 text-foreground" />
+              </button>
+              <AnimatePresence>
+                {searchOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 250 }}
+                    exit={{ opacity: 0, width: 0 }}
+                    className="absolute right-0 top-full mt-2 overflow-hidden"
+                  >
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t.nav.search}
+                      className="w-full px-4 py-2 bg-popover border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      autoFocus
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Language Switcher */}
+            <div className="relative">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1 p-2 hover:bg-secondary rounded-lg transition-colors text-sm font-medium"
+              >
+                <Globe className="w-4 h-4" />
+                {langLabels[language]}
+              </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 4 }}
+                    className="absolute right-0 top-full mt-1 bg-popover border border-border rounded-lg shadow-lg overflow-hidden"
+                  >
+                    {(Object.keys(langLabels) as Language[]).map((lang) => (
+                      <button
+                        key={lang}
+                        onClick={() => { setLanguage(lang); setLangOpen(false); }}
+                        className={`block w-full px-4 py-2 text-sm text-left hover:bg-secondary transition-colors ${
+                          language === lang ? 'bg-secondary font-semibold' : ''
+                        }`}
+                      >
+                        {langLabels[lang]}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* User */}
+            <Link to="/login" className="p-2 hover:bg-secondary rounded-lg transition-colors">
+              <User className="w-5 h-5 text-foreground" />
+            </Link>
+
+            {/* Cart */}
+            <button className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
+              <ShoppingCart className="w-5 h-5 text-foreground" />
+              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold">
+                0
+              </span>
+            </button>
+
+            {/* Mobile Menu */}
+            <button className="lg:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="lg:hidden border-t border-border overflow-hidden bg-background"
+          >
+            <nav className="container mx-auto px-4 py-4 space-y-2">
+              {navItems.map((item) => (
+                <div key={item.path}>
+                  <Link
+                    to={item.path}
+                    onClick={() => !item.hasDropdown && setMobileOpen(false)}
+                    className="block py-2 text-sm font-medium text-foreground hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                  {item.hasDropdown && (
+                    <div className="pl-4 space-y-1">
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          to={`/products?category=${cat.id}`}
+                          onClick={() => setMobileOpen(false)}
+                          className="block py-1 text-sm text-muted-foreground hover:text-primary"
+                        >
+                          {categoryNames[cat.id]}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+};
+
+export default Header;
