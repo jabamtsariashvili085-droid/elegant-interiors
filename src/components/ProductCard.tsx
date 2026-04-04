@@ -12,6 +12,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const { language, t } = useLanguage();
+  const { addToCart } = useCart();
 
   const name = language === 'ka' ? product.nameKa : language === 'en' ? product.nameEn : product.nameRu;
   const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
