@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Search, User, ShoppingCart, Menu, X, ChevronDown, Globe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/i18n';
+import { useCart } from '@/contexts/CartContext';
 import { categories } from '@/lib/products';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,6 +11,7 @@ const langLabels: Record<Language, string> = { ka: 'ქარ', en: 'EN', ru: 'R
 
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
+  const { totalItems, setIsCartOpen } = useCart();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
@@ -166,11 +168,13 @@ const Header = () => {
             </Link>
 
             {/* Cart */}
-            <button className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
+            <button onClick={() => setIsCartOpen(true)} className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
               <ShoppingCart className="w-5 h-5 text-foreground" />
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold">
+                  {totalItems}
+                </span>
+              )}
             </button>
 
             {/* Mobile Menu */}

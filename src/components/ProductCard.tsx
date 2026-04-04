@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Star, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 import { Product } from '@/lib/products';
 
 interface ProductCardProps {
@@ -11,6 +12,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const { language, t } = useLanguage();
+  const { addToCart } = useCart();
 
   const name = language === 'ka' ? product.nameKa : language === 'en' ? product.nameEn : product.nameRu;
   const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
@@ -59,7 +61,10 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               )}
               <span className="font-bold text-foreground">₾{product.price.toFixed(2)}</span>
             </div>
-            <button className="flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-lg hover:opacity-90 transition-opacity">
+            <button
+              onClick={() => addToCart(product)}
+              className="flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-lg hover:opacity-90 transition-opacity"
+            >
               <ShoppingCart className="w-3.5 h-3.5" />
               {t.products.addToCart}
             </button>
