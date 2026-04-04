@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Star, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCart } from '@/contexts/CartContext';
 import { Product } from '@/lib/products';
 
 interface ProductCardProps {
