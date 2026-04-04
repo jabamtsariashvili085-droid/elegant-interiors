@@ -13,7 +13,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguage] = useState<Language>('ka');
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t: translations[language] }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t: translations[language] as unknown as TranslationKeys }}>
       {children}
     </LanguageContext.Provider>
   );
