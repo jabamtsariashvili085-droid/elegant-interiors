@@ -168,11 +168,13 @@ const Header = () => {
             </Link>
 
             {/* Cart */}
-            <button className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
+            <button onClick={() => setIsCartOpen(true)} className="relative p-2 hover:bg-secondary rounded-lg transition-colors">
               <ShoppingCart className="w-5 h-5 text-foreground" />
-              <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold">
-                0
-              </span>
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center font-semibold">
+                  {totalItems}
+                </span>
+              )}
             </button>
 
             {/* Mobile Menu */}
