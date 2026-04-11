@@ -186,7 +186,7 @@ const ProductDetail = () => {
 
             {/* Add to Cart */}
             <button
-              onClick={() => addToCart(product)}
+              onClick={() => addToCart(product, language)}
               disabled={!product.inStock}
               className="flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground font-semibold py-4 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed text-base"
             >
