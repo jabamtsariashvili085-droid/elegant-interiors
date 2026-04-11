@@ -25,23 +25,24 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       transition={{ delay: index * 0.1, duration: 0.5 }}
       className="group"
     >
-      <div className="relative rounded-xl overflow-hidden bg-card border border-border hover:shadow-lg transition-shadow duration-300">
-        {/* Image */}
-        <div className="relative aspect-square overflow-hidden">
-          <img
-            src={product.image}
-            alt={name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-            width={640}
-            height={640}
-          />
-          {discount > 0 && (
-            <span className="absolute top-3 left-3 bg-discount text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full">
-              -{discount}%
-            </span>
-          )}
-        </div>
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="relative rounded-xl overflow-hidden bg-card border border-border hover:shadow-lg transition-shadow duration-300">
+          {/* Image */}
+          <div className="relative aspect-square overflow-hidden">
+            <img
+              src={product.image}
+              alt={name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              width={640}
+              height={640}
+            />
+            {discount > 0 && (
+              <span className="absolute top-3 left-3 bg-discount text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full">
+                -{discount}%
+              </span>
+            )}
+          </div>
 
         {/* Info */}
         <div className="p-4">
@@ -69,8 +70,9 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               {t.products.addToCart}
             </button>
           </div>
+          </div>
         </div>
-      </div>
+      </Link>
     </motion.div>
   );
 };
