@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { toast } from 'sonner';
 import { Product } from '@/lib/products';
 
 export interface CartItem {
@@ -8,7 +9,7 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, lang?: 'ka' | 'en' | 'ru') => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -24,7 +25,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const addToCart = useCallback((product: Product) => {
+  const addToCart = useCallback((product: Product, lang: 'ka' | 'en' | 'ru' = 'ka') => {
     setItems(prev => {
       const existing = prev.find(item => item.product.id === product.id);
       if (existing) {
@@ -36,6 +37,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prev, { product, quantity: 1 }];
     });
+    const name = lang === 'ka' ? product.nameKa : lang === 'en' ? product.nameEn : product.nameRu;
+    const msg = lang === 'ka' ? 'დაემატა კალათაში' : lang === 'en' ? 'Added to cart' : 'Добавлено в корзину';
+    toast.success(msg, { description: name });
     setIsCartOpen(true);
   }, []);
 

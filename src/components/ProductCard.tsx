@@ -63,7 +63,7 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               <span className="font-bold text-foreground">₾{product.price.toFixed(2)}</span>
             </div>
             <button
-              onClick={() => addToCart(product)}
+              onClick={(e) => { e.preventDefault(); addToCart(product, language); }}
               className="flex items-center gap-1.5 bg-primary text-primary-foreground text-xs font-semibold px-3 py-2 rounded-lg hover:opacity-90 transition-opacity"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
