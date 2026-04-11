@@ -15,7 +15,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Noto Sans Georgian"', 'system-ui', 'sans-serif'],
-        heading: ['"Noto Sans Georgian"', 'system-ui', 'sans-serif'],
+        heading: ['"Playfair Display"', '"Noto Sans Georgian"', 'serif'],
+        display: ['"Playfair Display"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
