@@ -15,8 +15,10 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Noto Sans Georgian"', 'system-ui', 'sans-serif'],
-        heading: ['"Playfair Display"', '"Noto Sans Georgian"', 'serif'],
-        display: ['"Playfair Display"', 'serif'],
+        heading: ['"Noto Serif"', '"Noto Sans Georgian"', 'serif'],
+        display: ['"Noto Serif"', 'serif'],
+        body: ['Manrope', '"Noto Sans Georgian"', 'sans-serif'],
+        label: ['Inter', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +56,10 @@ export default {
         },
         warm: "hsl(var(--surface-warm))",
         discount: "hsl(var(--badge-discount))",
+        gold: {
+          DEFAULT: "hsl(var(--gold-glow))",
+          muted: "hsl(var(--gold-muted))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -67,8 +73,8 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius))",
+        sm: "calc(var(--radius))",
       },
       keyframes: {
         "accordion-down": {
@@ -91,6 +97,10 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -98,6 +108,7 @@ export default {
         "fade-in-up": "fade-in-up 0.6s ease-out",
         "fade-in": "fade-in 0.4s ease-out",
         "scale-in": "scale-in 0.5s ease-out",
+        "shimmer": "shimmer 2s linear infinite",
       },
     },
   },

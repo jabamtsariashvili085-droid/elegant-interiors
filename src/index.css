@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&family=Noto+Serif:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,48 +6,55 @@
 
 @layer base {
   :root {
-    --background: 40 33% 97%;
-    --foreground: 30 10% 15%;
+    /* Obsidian Dark + Gold Luxury Palette */
+    --background: 220 20% 6%;
+    --foreground: 40 20% 92%;
 
-    --card: 40 25% 95%;
-    --card-foreground: 30 10% 15%;
+    --card: 220 18% 10%;
+    --card-foreground: 40 20% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 15%;
+    --popover: 220 18% 10%;
+    --popover-foreground: 40 20% 92%;
 
-    --primary: 160 35% 40%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 42 78% 55%;
+    --primary-foreground: 220 20% 6%;
 
-    --secondary: 30 20% 90%;
-    --secondary-foreground: 30 10% 25%;
+    --secondary: 220 15% 14%;
+    --secondary-foreground: 40 15% 80%;
 
-    --muted: 30 15% 92%;
-    --muted-foreground: 30 8% 50%;
+    --muted: 220 15% 14%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 35 60% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 42 78% 55%;
+    --accent-foreground: 220 20% 6%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 160 35% 40%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 42 78% 55%;
 
-    --radius: 0.75rem;
+    --radius: 0px;
 
-    --hero-overlay: linear-gradient(135deg, hsla(30, 10%, 15%, 0.6) 0%, hsla(30, 10%, 15%, 0.2) 100%);
-    --surface-warm: 35 30% 93%;
-    --badge-discount: 160 45% 42%;
+    --hero-overlay: linear-gradient(135deg, hsla(220, 20%, 6%, 0.85) 0%, hsla(220, 20%, 6%, 0.3) 100%);
+    --surface-warm: 220 15% 8%;
+    --badge-discount: 0 72% 51%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --gold-glow: 42 78% 55%;
+    --gold-muted: 42 40% 35%;
+    --obsidian: 220 20% 6%;
+    --obsidian-light: 220 18% 12%;
+    --glass: 220 15% 12%;
+
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 40 20% 92%;
+    --sidebar-primary: 42 78% 55%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 15% 12%;
+    --sidebar-accent-foreground: 40 20% 92%;
+    --sidebar-border: 220 15% 15%;
+    --sidebar-ring: 42 78% 55%;
   }
 }
 
@@ -57,7 +64,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-body antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -68,5 +75,34 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .glass {
+    background: hsla(220, 18%, 10%, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid hsla(40, 20%, 92%, 0.08);
+  }
+
+  .glass-heavy {
+    background: hsla(220, 20%, 6%, 0.75);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid hsla(40, 20%, 92%, 0.06);
+  }
+
+  .gold-gradient {
+    background: linear-gradient(135deg, hsl(42, 78%, 55%) 0%, hsl(38, 60%, 42%) 100%);
+  }
+
+  .gold-text {
+    background: linear-gradient(135deg, hsl(42, 78%, 60%) 0%, hsl(38, 50%, 45%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .line-gold {
+    background: linear-gradient(90deg, hsl(42, 78%, 55%) 0%, transparent 100%);
   }
 }

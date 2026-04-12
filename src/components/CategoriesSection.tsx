@@ -17,40 +17,50 @@ const CategoriesSection = () => {
   ];
 
   return (
-    <section className="py-16 lg:py-24">
+    <section className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          className="text-2xl lg:text-3xl font-bold mb-10"
+          className="text-center mb-14"
         >
-          {t.categories.title}
-        </motion.h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <span className="font-label text-xs uppercase tracking-[0.3em] text-primary mb-4 block">
+            {t.categories.title}
+          </span>
+          <h2 className="text-3xl lg:text-5xl font-display font-bold">
+            {t.categories.title}
+          </h2>
+          <div className="w-16 h-px line-gold mx-auto mt-6" />
+        </motion.div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
           {cats.map((cat, i) => (
             <motion.div
               key={cat.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <Link
                 to={`/products?category=${cat.id}`}
-                className="group block relative rounded-xl overflow-hidden aspect-square"
+                className="group block relative overflow-hidden aspect-[3/4]"
               >
                 <img
                   src={cat.image}
                   alt={cat.label}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   loading="lazy"
                   width={640}
-                  height={640}
+                  height={853}
                 />
-                <div className="absolute inset-0 bg-foreground/30 group-hover:bg-foreground/40 transition-colors" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <span className="text-sm lg:text-base font-semibold" style={{ color: 'white' }}>{cat.label}</span>
+                <div className="absolute inset-0 bg-background/40 group-hover:bg-background/20 transition-colors duration-500" />
+                <div className="absolute inset-0 flex flex-col items-center justify-end pb-8">
+                  <span className="font-heading text-lg lg:text-xl font-semibold text-white mb-2">{cat.label}</span>
+                  <span className="font-label text-xs uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                    {t.products.viewAll} →
+                  </span>
                 </div>
               </Link>
             </motion.div>
