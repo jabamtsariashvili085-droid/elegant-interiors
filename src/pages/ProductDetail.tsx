@@ -1,7 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ShoppingCart, Check, X, Ruler, ChevronRight, ZoomIn } from 'lucide-react';
+import { Star, ShoppingCart, Check, X, Ruler, ChevronRight, ZoomIn, Heart, Package, MessageSquare, User } from 'lucide-react';
 import { useState } from 'react';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
 import { sampleProducts } from '@/lib/products';
@@ -25,12 +26,38 @@ const imageMap: Record<string, string> = {
   '/images/product-6.jpg': productCommode,
 };
 
+const tabLabels = {
+  ka: { description: 'აღწერა', specs: 'მახასიათებლები', reviews: 'მიმოხილვები', rating: 'რეიტინგი' },
+  en: { description: 'Description', specs: 'Specifications', reviews: 'Reviews', rating: 'Rating' },
+  ru: { description: 'Описание', specs: 'Характеристики', reviews: 'Отзывы', rating: 'Рейтинг' },
+};
+
+const fakeReviews = {
+  ka: [
+    { name: 'გიორგი მ.', date: '2026-03-15', rating: 5, text: 'შესანიშნავი ხარისხი, ძალიან კმაყოფილი ვარ. მიწოდება სწრაფი და პროფესიონალური იყო.' },
+    { name: 'ნინო კ.', date: '2026-02-20', rating: 4, text: 'ლამაზი დიზაინი და კარგი მასალა. ფასი ცოტა მაღალია, მაგრამ ღირს.' },
+    { name: 'დავით ბ.', date: '2026-01-10', rating: 5, text: 'უკვე მეორედ ვყიდულობ ამ მაღაზიიდან. ხარისხი ყოველთვის საუკეთესოა.' },
+  ],
+  en: [
+    { name: 'George M.', date: '2026-03-15', rating: 5, text: 'Excellent quality, very satisfied. Delivery was fast and professional.' },
+    { name: 'Nina K.', date: '2026-02-20', rating: 4, text: 'Beautiful design and good material. Price is a bit high but worth it.' },
+    { name: 'David B.', date: '2026-01-10', rating: 5, text: 'Already buying from this store for the second time. Quality is always the best.' },
+  ],
+  ru: [
+    { name: 'Георгий М.', date: '2026-03-15', rating: 5, text: 'Отличное качество, очень доволен. Доставка была быстрой и профессиональной.' },
+    { name: 'Нина К.', date: '2026-02-20', rating: 4, text: 'Красивый дизайн и хороший материал. Цена немного высока, но стоит того.' },
+    { name: 'Давид Б.', date: '2026-01-10', rating: 5, text: 'Уже второй раз покупаю в этом магазине. Качество всегда лучшее.' },
+  ],
+};
+
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const [selectedImage, setSelectedImage] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'reviews'>('description');
 
   const product = sampleProducts.find(p => p.id === id);
 
@@ -202,53 +229,147 @@ const ProductDetail = () => {
 
             <div className="h-px bg-border mb-6" />
 
-            <div className="mb-6">
-              <h3 className="font-label text-xs uppercase tracking-[0.2em] text-primary mb-3">{t.products.description}</h3>
-              <p className="text-muted-foreground leading-relaxed text-sm font-body">{description}</p>
+            {/* Add to Cart + Wishlist */}
+            <div className="flex gap-2 mb-8">
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => addToCart(product, language)}
+                disabled={!product.inStock}
+                className="flex-1 flex items-center justify-center gap-3 gold-gradient text-primary-foreground font-label font-bold text-sm uppercase tracking-widest py-4 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {t.products.addToCart}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => toggleWishlist(product.id, language)}
+                className="p-4 border border-border hover:border-primary/50 transition-all bg-secondary"
+              >
+                <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-primary text-primary' : 'text-foreground/60'}`} />
+              </motion.button>
             </div>
-
-            <div className="grid grid-cols-2 gap-1 mb-6">
-              <div className="p-4 bg-secondary border border-border">
-                <span className="font-label text-[10px] uppercase tracking-widest text-muted-foreground">{t.products.material}</span>
-                <p className="text-sm font-heading font-semibold text-foreground mt-1">{product.material}</p>
-              </div>
-              <div className="p-4 bg-secondary border border-border">
-                <span className="font-label text-[10px] uppercase tracking-widest text-muted-foreground">{t.products.color}</span>
-                <p className="text-sm font-heading font-semibold text-foreground mt-1 capitalize">{product.color}</p>
-              </div>
-            </div>
-
-            <div className="mb-8 p-5 bg-secondary border border-border">
-              <div className="flex items-center gap-2 mb-4">
-                <Ruler className="w-4 h-4 text-primary" />
-                <h3 className="font-label text-xs uppercase tracking-[0.2em] text-primary">{t.products.dimensions} (cm)</h3>
-              </div>
-              <div className="grid grid-cols-3 gap-1">
-                {[
-                  { label: t.products.width, value: product.dimensions.width },
-                  { label: t.products.height, value: product.dimensions.height },
-                  { label: t.products.depth, value: product.dimensions.depth },
-                ].map((dim) => (
-                  <div key={dim.label} className="text-center p-3 bg-background border border-border">
-                    <span className="font-label text-[10px] uppercase tracking-widest text-muted-foreground">{dim.label}</span>
-                    <p className="text-xl font-heading font-bold text-foreground mt-1">{dim.value}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => addToCart(product, language)}
-              disabled={!product.inStock}
-              className="flex items-center justify-center gap-3 w-full gold-gradient text-primary-foreground font-label font-bold text-sm uppercase tracking-widest py-4 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {t.products.addToCart}
-            </motion.button>
           </motion.div>
         </div>
+
+        {/* Tabs Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-20"
+        >
+          {/* Tab Headers */}
+          <div className="flex border-b border-border">
+            {([
+              { key: 'description' as const, label: tabLabels[language].description, icon: <Package className="w-4 h-4" /> },
+              { key: 'specs' as const, label: tabLabels[language].specs, icon: <Ruler className="w-4 h-4" /> },
+              { key: 'reviews' as const, label: tabLabels[language].reviews, icon: <MessageSquare className="w-4 h-4" /> },
+            ]).map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`relative flex items-center gap-2 px-6 py-4 font-label text-xs uppercase tracking-widest transition-colors ${
+                  activeTab === tab.key
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {tab.icon}
+                {tab.label}
+                {activeTab === tab.key && (
+                  <motion.div
+                    layoutId="tab-underline"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="p-6 lg:p-8 border border-t-0 border-border bg-card"
+            >
+              {activeTab === 'description' && (
+                <div className="max-w-2xl">
+                  <p className="text-muted-foreground leading-relaxed font-body">{description}</p>
+                </div>
+              )}
+
+              {activeTab === 'specs' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 max-w-2xl">
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{t.products.material}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground">{product.material}</span>
+                  </div>
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{t.products.color}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground capitalize">{product.color}</span>
+                  </div>
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{t.products.width}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground">{product.dimensions.width} cm</span>
+                  </div>
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{t.products.height}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground">{product.dimensions.height} cm</span>
+                  </div>
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{t.products.depth}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground">{product.dimensions.depth} cm</span>
+                  </div>
+                  <div className="p-4 bg-secondary border border-border flex justify-between">
+                    <span className="font-label text-xs uppercase tracking-widest text-muted-foreground">{tabLabels[language].rating}</span>
+                    <span className="text-sm font-heading font-semibold text-foreground flex items-center gap-1">
+                      {product.rating}/5 <Star className="w-3.5 h-3.5 fill-primary text-primary" />
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'reviews' && (
+                <div className="space-y-6 max-w-2xl">
+                  {fakeReviews[language].map((review, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-5 bg-secondary border border-border"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 flex items-center justify-center bg-primary/10 border border-primary/20">
+                            <User className="w-4 h-4 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-heading font-semibold text-foreground">{review.name}</p>
+                            <p className="text-[10px] text-muted-foreground font-label">{review.date}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: 5 }).map((_, j) => (
+                            <Star key={j} className={`w-3 h-3 ${j < review.rating ? 'fill-primary text-primary' : 'text-border'}`} />
+                          ))}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground leading-relaxed font-body">{review.text}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
 
         {/* Similar Products */}
         {similarProducts.length > 0 && (
