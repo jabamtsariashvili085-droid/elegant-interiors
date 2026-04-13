@@ -3,6 +3,7 @@ import { Star, ShoppingCart, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { Product } from '@/lib/products';
 
 interface ProductCardProps {
@@ -13,9 +14,11 @@ interface ProductCardProps {
 const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const { language, t } = useLanguage();
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   const name = language === 'ka' ? product.nameKa : language === 'en' ? product.nameEn : product.nameRu;
   const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+  const wishlisted = isInWishlist(product.id);
 
   return (
     <motion.div
@@ -27,7 +30,6 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     >
       <Link to={`/product/${product.id}`} className="block">
         <div className="relative overflow-hidden bg-card border border-border hover:border-primary/30 transition-all duration-500">
-          {/* Image */}
           <div className="relative aspect-square overflow-hidden">
             <img
               src={product.image}
@@ -38,12 +40,20 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               height={640}
             />
             <div className="absolute inset-0 bg-background/0 group-hover:bg-background/10 transition-colors duration-500" />
-            
+
             {discount > 0 && (
               <span className="absolute top-0 left-0 bg-destructive text-destructive-foreground text-xs font-label font-bold px-3 py-1.5 uppercase tracking-wider">
                 -{discount}%
               </span>
             )}
+
+            {/* Wishlist button */}
+            <button
+              onClick={(e) => { e.preventDefault(); toggleWishlist(product.id, language); }}
+              className="absolute top-3 right-3 p-2 glass border border-border hover:border-primary/50 transition-all z-10"
+            >
+              <Heart className={`w-4 h-4 transition-colors ${wishlisted ? 'fill-primary text-primary' : 'text-foreground/60 hover:text-primary'}`} />
+            </button>
 
             {/* Hover Actions */}
             <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
@@ -57,7 +67,6 @@ const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
             </div>
           </div>
 
-          {/* Info */}
           <div className="p-4 lg:p-5">
             <h3 className="font-heading font-medium text-sm lg:text-base text-foreground mb-2 line-clamp-1">{name}</h3>
             <div className="flex items-center gap-0.5 mb-3">

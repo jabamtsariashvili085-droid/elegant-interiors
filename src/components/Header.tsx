@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, User, ShoppingCart, Menu, X, ChevronDown, ChevronRight, Globe } from 'lucide-react';
+import { Search, User, ShoppingCart, Menu, X, ChevronDown, ChevronRight, Globe, Heart } from 'lucide-react';
 import SearchModal from '@/components/SearchModal';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/i18n';
 import { useCart } from '@/contexts/CartContext';

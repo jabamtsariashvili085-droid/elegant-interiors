@@ -5,7 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import CartDrawer from "@/components/CartDrawer";
+import WishlistDrawer from "@/components/WishlistDrawer";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
 import About from "./pages/About";
@@ -20,10 +22,12 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <CartDrawer />
+        <WishlistProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <CartDrawer />
+            <WishlistDrawer />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -36,9 +40,10 @@ const App = () => (
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </CartProvider>
-    </LanguageProvider>
-  </QueryClientProvider>
+      </WishlistProvider>
+    </CartProvider>
+  </LanguageProvider>
+</QueryClientProvider>
 );
 
 export default App;
