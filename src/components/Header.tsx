@@ -178,7 +178,20 @@ const Header = () => {
                 <User className="w-5 h-5" />
               </Link>
 
-              {/* Cart */}
+              {/* Wishlist */}
+              <button onClick={() => setIsWishlistOpen(true)} className="relative p-2.5 hover:text-primary transition-colors">
+                <Heart className={`w-5 h-5 ${wishlist.length > 0 ? 'fill-primary text-primary' : ''}`} />
+                {wishlist.length > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute top-0.5 right-0.5 w-4 h-4 gold-gradient text-primary-foreground text-[10px] flex items-center justify-center font-bold"
+                  >
+                    {wishlist.length}
+                  </motion.span>
+                )}
+              </button>
+
               <button onClick={() => setIsCartOpen(true)} className="relative p-2.5 hover:text-primary transition-colors">
                 <ShoppingCart className="w-5 h-5" />
                 {totalItems > 0 && (
