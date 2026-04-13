@@ -341,6 +341,7 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 };
