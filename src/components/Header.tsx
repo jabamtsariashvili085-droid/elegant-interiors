@@ -14,6 +14,7 @@ const langLabels: Record<Language, string> = { ka: 'ქარ', en: 'EN', ru: 'R
 const Header = () => {
   const { language, setLanguage, t } = useLanguage();
   const { totalItems, setIsCartOpen } = useCart();
+  const { wishlist, setIsWishlistOpen } = useWishlist();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
