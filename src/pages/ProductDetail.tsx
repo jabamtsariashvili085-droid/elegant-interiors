@@ -26,6 +26,30 @@ const imageMap: Record<string, string> = {
   '/images/product-6.jpg': productCommode,
 };
 
+const tabLabels = {
+  ka: { description: 'აღწერა', specs: 'მახასიათებლები', reviews: 'მიმოხილვები', rating: 'რეიტინგი' },
+  en: { description: 'Description', specs: 'Specifications', reviews: 'Reviews', rating: 'Rating' },
+  ru: { description: 'Описание', specs: 'Характеристики', reviews: 'Отзывы', rating: 'Рейтинг' },
+};
+
+const fakeReviews = {
+  ka: [
+    { name: 'გიორგი მ.', date: '2026-03-15', rating: 5, text: 'შესანიშნავი ხარისხი, ძალიან კმაყოფილი ვარ. მიწოდება სწრაფი და პროფესიონალური იყო.' },
+    { name: 'ნინო კ.', date: '2026-02-20', rating: 4, text: 'ლამაზი დიზაინი და კარგი მასალა. ფასი ცოტა მაღალია, მაგრამ ღირს.' },
+    { name: 'დავით ბ.', date: '2026-01-10', rating: 5, text: 'უკვე მეორედ ვყიდულობ ამ მაღაზიიდან. ხარისხი ყოველთვის საუკეთესოა.' },
+  ],
+  en: [
+    { name: 'George M.', date: '2026-03-15', rating: 5, text: 'Excellent quality, very satisfied. Delivery was fast and professional.' },
+    { name: 'Nina K.', date: '2026-02-20', rating: 4, text: 'Beautiful design and good material. Price is a bit high but worth it.' },
+    { name: 'David B.', date: '2026-01-10', rating: 5, text: 'Already buying from this store for the second time. Quality is always the best.' },
+  ],
+  ru: [
+    { name: 'Георгий М.', date: '2026-03-15', rating: 5, text: 'Отличное качество, очень доволен. Доставка была быстрой и профессиональной.' },
+    { name: 'Нина К.', date: '2026-02-20', rating: 4, text: 'Красивый дизайн и хороший материал. Цена немного высока, но стоит того.' },
+    { name: 'Давид Б.', date: '2026-01-10', rating: 5, text: 'Уже второй раз покупаю в этом магазине. Качество всегда лучшее.' },
+  ],
+};
+
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { language, t } = useLanguage();
