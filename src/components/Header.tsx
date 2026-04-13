@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, User, ShoppingCart, Menu, X, ChevronDown, ChevronRight, Globe } from 'lucide-react';
+import SearchModal from '@/components/SearchModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Language } from '@/lib/i18n';
 import { useCart } from '@/contexts/CartContext';
@@ -18,13 +19,23 @@ const Header = () => {
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const navItems = [
@@ -120,30 +131,12 @@ const Header = () => {
             {/* Right side */}
             <div className="flex items-center gap-1 lg:gap-2">
               {/* Search */}
-              <div className="relative">
-                <button onClick={() => setSearchOpen(!searchOpen)} className="p-2.5 hover:text-primary transition-colors">
-                  <Search className="w-5 h-5" />
-                </button>
-                <AnimatePresence>
-                  {searchOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 280 }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="absolute right-0 top-full mt-2 overflow-hidden"
-                    >
-                      <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={t.nav.search}
-                        className="w-full px-4 py-3 glass border border-border text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
-                        autoFocus
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <button onClick={() => setSearchOpen(true)} className="p-2.5 hover:text-primary transition-colors flex items-center gap-2">
+                <Search className="w-5 h-5" />
+                <kbd className="hidden lg:inline-flex px-1.5 py-0.5 text-[10px] font-label text-muted-foreground border border-border bg-muted/20">
+                  ⌘K
+                </kbd>
+              </button>
 
               {/* Language */}
               <div className="relative hidden sm:block">
@@ -348,6 +341,7 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 };
